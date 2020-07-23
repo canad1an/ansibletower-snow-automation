@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  vars_files:
+  - "cred.yaml"
+
+  tasks:
+    - name: Avi Deploy new virtual
+      include_role:
+        name: avinetworks.aviconfig
+      vars:
+        cloud_name: "Default-Cloud"
+        tenant_name: "admin"
+        app_name: "{{ ApplicationName }}"
+        app_type: "{{ ApplicationType }}"
+        department: "{{ Department }}"
+        health_monitor: "{{ HealthMonitor }}"
+        listening_port: "{{ ListeningPort }}"
+        pool_members: "{{  PoolMembers.split('::') }}"
+        avi_config_state: "present"
+        avi_controller: "{{ avi_controller_1 }}"
+        avi_username: "{{ avi_user }}"
+        avi_password: "{{ avi_pass }}"
+        api_version: "18.2.8"
+        tmp_avi_config: "{{ lookup('template','template/vs_create.j2') | from_yaml }}"
+        avi_config: "{{tmp_avi_config.avi_config }}"
