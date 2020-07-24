@@ -3,7 +3,7 @@
   gather_facts: no
 
   vars_files:
-  - "{{ vault_loc }}"
+    - "/var/lib/awx/projects/creds.yaml"
 
   tasks:
     - name: Avi Deploy new virtual
