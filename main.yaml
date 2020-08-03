@@ -6,6 +6,10 @@
     - "vars/creds.yaml"
 
   tasks:
+    # - local_action:
+    #   - command ansible-galaxy install avinetworks.aviconfig --roles-path /etc/ansible/roles
+    #   - command ansible-galaxy install avinetworks.avisdk --roles-path /etc/ansible/roles
+      
     - name: Avi Deploy new virtual
       include_role:
         name: avinetworks.aviconfig
