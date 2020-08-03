@@ -5,7 +5,6 @@ This script is part of a larger automation workflow. The flow is ServiceNow Cata
 ## Variables
 /vars/creds.yaml - Login credentials for the Avi Controller
 
-Example with a single rule:
 ```
 avi_controller_username: myusername
 avi_controller_password: mypassword1!
