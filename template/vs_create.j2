@@ -75,6 +75,12 @@ avi_config:
       vip:
         - auto_allocate_ip: true
           auto_allocate_ip_type: V4_ONLY
+          auto_allocate_floating_ip: true
+          avi_allocated_fip: true
+          avi_allocated_vip: true
+          enabled: true
+          subnet_uuid: "{{ aws_subnet }}"
+          vip_id: '0'
 
   virtualservice:
     - api_version: "{{ api_version | default('18.2.8') }}"
