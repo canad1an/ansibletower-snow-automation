@@ -9,9 +9,11 @@
     # - local_action:
     #   - command: ansible-galaxy install avinetworks.aviconfig --roles-path /etc/ansible/roles
     #   - command: ansible-galaxy install avinetworks.avisdk --roles-path /etc/ansible/roles
-    - name: Install avisdk
-      pip:
-        name: avisdk
+    - name: Install Avisdk
+      command: python2.7 -m pip install avisdk
+    # - name: Install avisdk
+    #   pip:
+    #     name: avisdk
     - name: Avi Deploy new virtual
       include_role:
         name: avinetworks.aviconfig
