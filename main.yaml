@@ -6,9 +6,9 @@
     - "vars/creds.yaml"
 
   tasks:
-    - local_action:
-      - command ansible-galaxy install avinetworks.aviconfig --roles-path /etc/ansible/roles
-      - command ansible-galaxy install avinetworks.avisdk --roles-path /etc/ansible/roles
+    # - local_action:
+    #   - command: ansible-galaxy install avinetworks.aviconfig --roles-path /etc/ansible/roles
+    #   - command: ansible-galaxy install avinetworks.avisdk --roles-path /etc/ansible/roles
     - name: Install avisdk
       pip:
         name: avisdk
