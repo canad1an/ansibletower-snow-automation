@@ -28,6 +28,7 @@ set_fact:
     {% set backend_ssl = 0 %}
   {% endif %}
 
+
   {% if health_monitor == "ping" %}
     {% set hm_prof = "System-Ping" %}
   {% elif health_monitor == "tcp" %}
@@ -69,6 +70,8 @@ avi_config:
       health_monitor_refs: "/api/healthmonitor?name={{ hm_prof }}"
       inline_health_monitor: true
       {% endif %}
+
+  {% if env == "aws" %}
   vsvip:
     - name: "{{ app_name }}-vsvip"
       cloud_ref: "/api/cloud?name={{ cloud_name | default('Default-Cloud') }}"
@@ -81,6 +84,27 @@ avi_config:
           enabled: true
           subnet_uuid: "{{ aws_subnet }}"
           vip_id: '0'
+  {% elif env == "ibm" %}
+  vsvip:
+    - name: "{{ app_name }}-vsvip"
+      cloud_ref: "/api/cloud?name={{ cloud_name | default('Default-Cloud') }}"
+      vip:
+        - auto_allocate_ip: true
+          auto_allocate_ip_type: V4_ONLY
+          auto_allocate_floating_ip: false
+          avi_allocated_fip: false
+          avi_allocated_vip: false
+          enabled: true
+          vip_id: '0'
+          ipam_network_subnet:
+            network_ref: "/api/network?name={{ ibm_vip_network_name }}"
+            subnet:
+              ip_addr:
+                addr: "{{ ibm_vip_subnet }}"
+                type: V4
+              mask: "{{ ibm_vip_mask }}"
+  {% endif %}
+
 
   virtualservice:
     - api_version: "{{ api_version | default('18.2.8') }}"

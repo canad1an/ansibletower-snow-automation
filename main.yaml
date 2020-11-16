@@ -22,6 +22,7 @@
         tenant_name: "admin"
         app_name: "{{ ApplicationName }}"
         app_type: "{{ ApplicationType }}"
+        env: "{{ Environment }}"
         department: "{{ Department }}"
         health_monitor: "{{ HealthMonitor }}"
         listening_port: "{{ ListeningPort }}"
