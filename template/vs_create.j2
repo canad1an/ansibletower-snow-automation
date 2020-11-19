@@ -41,6 +41,11 @@ set_fact:
     {% set hm_prof = "" %}
   {% endif %}
 
+  {% if env == "aws" %}
+    avi_controller: "{{ aws_avi_controller_1 }}"
+  {% elif env == "ibm" %}
+    avi_controller: "{{ ibm_avi_controller_dal }}"
+
 avi_config:
   {% if avi_config_state != "absent" %}
 
@@ -97,12 +102,12 @@ avi_config:
           enabled: true
           vip_id: '0'
           ipam_network_subnet:
-            network_ref: "/api/network?name={{ ibm_vip_network_name }}"
+            network_ref: "/api/network?name={{ ibm_vip_network_name_dal }}"
             subnet:
               ip_addr:
-                addr: "{{ ibm_vip_subnet }}"
+                addr: "{{ ibm_vip_subnet_dal }}"
                 type: V4
-              mask: "{{ ibm_vip_mask }}"
+              mask: "{{ ibm_vip_mask_dal }}"
   {% endif %}
 
 

@@ -28,7 +28,6 @@
         listening_port: "{{ ListeningPort }}"
         pool_members: "{{  PoolMembers.split('::') }}"
         avi_config_state: "present"
-        avi_controller: "{{ aws_avi_controller_1 }}"
         avi_username: "{{ aws_tower_username }}"
         avi_password: "{{ aws_tower_password }}"
         api_version: "18.2.8"
