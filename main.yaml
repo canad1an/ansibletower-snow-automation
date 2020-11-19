@@ -24,7 +24,7 @@
         app_type: "{{ ApplicationType }}"
         env: "{{ Environment }}"
         department: "{{ Department }}"
-        avi_controller: "{% if Environment=='aws' %}{{ aws_avi_controller_1 }}{% elif Environment=='ibm-dal'%}{{ ibm_avi_controller_dal }}{% elif Environment=='ibm-lon'%}{{ ibm_avi_controller_lon }}{% endif %}"
+        avi_controller: "{% if Environment=='aws' %}{{ aws_avi_controller_1 }}{% elif Environment=='ibm-dallas'%}{{ ibm_avi_controller_dal }}{% elif Environment=='ibm-london'%}{{ ibm_avi_controller_lon }}{% endif %}"
         health_monitor: "{{ HealthMonitor }}"
         listening_port: "{{ ListeningPort }}"
         pool_members: "{{  PoolMembers.split('::') }}"
