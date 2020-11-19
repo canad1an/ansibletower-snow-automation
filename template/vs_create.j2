@@ -41,17 +41,12 @@ set_fact:
     {% set hm_prof = "" %}
   {% endif %}
 
-  {% if env == "aws" %}
-    avi_controller: "{{ aws_avi_controller_1 }}"
-  {% elif env == "ibm" %}
-    avi_controller: "{{ ibm_avi_controller_dal }}"
-  {% endif %}
-  
 avi_config:
   {% if avi_config_state != "absent" %}
 
   pool:
     - api_version: "{{ api_version | default('18.2.8') }}"
+      avi_controller: "{{ aws_avi_controller_1 }}"
       avi_config_state: present
       name: "{{ app_name }}-pool"
       cloud_ref: "/api/cloud?name={{ cloud_name | default('Default-Cloud') }}"
