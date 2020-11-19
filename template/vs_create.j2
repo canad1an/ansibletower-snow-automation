@@ -45,7 +45,8 @@ set_fact:
     avi_controller: "{{ aws_avi_controller_1 }}"
   {% elif env == "ibm" %}
     avi_controller: "{{ ibm_avi_controller_dal }}"
-
+  {% endif %}
+  
 avi_config:
   {% if avi_config_state != "absent" %}
 
