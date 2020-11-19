@@ -6,8 +6,6 @@
     - "vars/creds.yaml"
 
   tasks:
-    - set_fact:
-        avi_controller: "{% if Environment=='aws' %}{{ aws_avi_controller_1 }}{% elif Environment=='ibm'%}{{ ibm_avi_controller_dal }}{% endif %}"
     # - local_action:
     #   - command: ansible-galaxy install avinetworks.aviconfig --roles-path /etc/ansible/roles
     #   - command: ansible-galaxy install avinetworks.avisdk --roles-path /etc/ansible/roles
@@ -26,6 +24,7 @@
         app_type: "{{ ApplicationType }}"
         env: "{{ Environment }}"
         department: "{{ Department }}"
+        avi_controller: "{% if Environment=='aws' %}{{ aws_avi_controller_1 }}{% elif Environment=='ibm'%}{{ ibm_avi_controller_dal }}{% endif %}"
         health_monitor: "{{ HealthMonitor }}"
         listening_port: "{{ ListeningPort }}"
         pool_members: "{{  PoolMembers.split('::') }}"
