@@ -46,7 +46,6 @@ avi_config:
 
   pool:
     - api_version: "{{ api_version | default('18.2.8') }}"
-      avi_controller: "{{ aws_avi_controller_1 }}"
       avi_config_state: present
       name: "{{ app_name }}-pool"
       cloud_ref: "/api/cloud?name={{ cloud_name | default('Default-Cloud') }}"
@@ -55,14 +54,33 @@ avi_config:
       lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
       default_server_port: "80"
       servers:
-        {% for poolm in pool_members %}
-        {% set pm_details = poolm.split(',') %}
+        {% if gslb == "Yes" and env == "ibm-" %}
+          {% for poolm in pool_members %}
+          {% set pm_details = poolm.split(',') %}
+            {% if location == "dal" and pm_details[3] == "dallas" %}
         - ip:
            addr: "{{ pm_details[0] }}"
            type: 'V4'
            enabled: "{{ pm_details[2] }}"
           port: "{{ pm_details[1] }}"
-        {% endfor %}
+            {% elif location == "lon" and pm_details[3] == "london" %}
+        - ip:
+           addr: "{{ pm_details[0] }}"
+           type: 'V4'
+           enabled: "{{ pm_details[2] }}"
+          port: "{{ pm_details[1] }}"
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% for poolm in pool_members %}
+          {% set pm_details = poolm.split(',') %}
+        - ip:
+           addr: "{{ pm_details[0] }}"
+           type: 'V4'
+           enabled: "{{ pm_details[2] }}"
+          port: "{{ pm_details[1] }}"
+          {% endfor %}
+        {% endif %}
       {% if backend_ssl == 1 %}
       sni_enabled: true
       ssl_profile_ref: "/api/sslprofile?name=System-Standard"
