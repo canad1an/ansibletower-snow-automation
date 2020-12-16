@@ -35,3 +35,55 @@
         aws_subnet: "{{ aws_network_ref }}"
         tmp_avi_config: "{{ lookup('template','template/vs_create.j2') | from_yaml }}"
         avi_config: "{{tmp_avi_config.avi_config }}"
+      when: GslbService == 'No'
+
+    - name: Avi Deploy new virtuals for multi-site GSLB
+      include_role:
+        name: avinetworks.aviconfig
+      vars:
+        cloud_name: "Default-Cloud"
+        tenant_name: "admin"
+        app_name: "{{ ApplicationName }}"
+        app_type: "{{ ApplicationType }}"
+        env: "{{ Environment }}"
+        department: "{{ Department }}"
+        avi_controller: "{{ item }}"
+        health_monitor: "{{ HealthMonitor }}"
+        listening_port: "{{ ListeningPort }}"
+        pool_members: "{{  PoolMembers.split('::') }}"
+        avi_config_state: "present"
+        avi_username: "{{ aws_tower_username }}"
+        avi_password: "{{ aws_tower_password }}"
+        api_version: "18.2.8"
+        aws_subnet: "{{ aws_network_ref }}"
+        tmp_avi_config: "{{ lookup('template','template/vs_create.j2') | from_yaml }}"
+        avi_config: "{{tmp_avi_config.avi_config }}"
+      when: GslbService == 'Yes' and env == "ibm-"
+      with_items:
+        - ibm_avi_controller_dal
+        - ibm_avi_controller_lon
+
+
+
+    # - name: Avi Deploy new virtuals for multi-site GSLB
+    #   include_role:
+    #     name: avinetworks.aviconfig
+    #   vars:
+    #     cloud_name: "Default-Cloud"
+    #     tenant_name: "admin"
+    #     app_name: "{{ ApplicationName }}"
+    #     app_type: "{{ ApplicationType }}"
+    #     env: "{{ Environment }}"
+    #     department: "{{ Department }}"
+    #     avi_controller: "{{ ibm_avi_controller_gslb_leader }}"
+    #     health_monitor: "{{ HealthMonitor }}"
+    #     listening_port: "{{ ListeningPort }}"
+    #     pool_members: "{{  PoolMembers.split('::') }}"
+    #     avi_config_state: "present"
+    #     avi_username: "{{ aws_tower_username }}"
+    #     avi_password: "{{ aws_tower_password }}"
+    #     api_version: "18.2.8"
+    #     aws_subnet: "{{ aws_network_ref }}"
+    #     tmp_avi_config: "{{ lookup('template','template/vs_create.j2') | from_yaml }}"
+    #     avi_config: "{{tmp_avi_config.avi_config }}"
+    #   when: "{{ GslbService }}" is 'Yes'
