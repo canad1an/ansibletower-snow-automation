@@ -54,7 +54,7 @@ avi_config:
       lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
       default_server_port: "80"
       servers:
-        {% if gslb == "Yes" and env == "ibm-" %}
+        {% if gslb == "Yes" and env.startswith('ibm-') %}
           {% for poolm in pool_members %}
           {% set pm_details = poolm.split(',') %}
             {% if location == "dal" and pm_details[3] == "dallas" %}
