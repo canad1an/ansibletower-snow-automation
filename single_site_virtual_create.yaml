@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  vars_files:
+    - "vars/creds.yaml"
+  pre_tasks:
+    - pip:
+        name: 
+        - avisdk 
+        state: latest
+
+  roles:
+    - role: avinetworks.avisdk
+    - role: configure_virtual
+      vars:
+        loc: ""
+        ctrl: "{% if Environment=='aws' %}{{ aws_avi_controller_1 }}{% elif Environment=='ibm-dallas'%}{{ ibm_avi_controller_dal }}{% elif Environment=='ibm-london'%}{{ ibm_avi_controller_lon }}{% endif %}"
