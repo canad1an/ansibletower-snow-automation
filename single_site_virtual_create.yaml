@@ -4,11 +4,11 @@
 
   vars_files:
     - "vars/creds.yaml"
-  pre_tasks:
-    - pip:
-        name: 
-        - avisdk 
-        state: latest
+  # pre_tasks:
+  #   - pip:
+  #       name: 
+  #       - avisdk 
+  #       state: latest
 
   roles:
     - role: avinetworks.avisdk
