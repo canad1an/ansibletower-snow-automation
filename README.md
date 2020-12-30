@@ -15,31 +15,31 @@ Example extra variables:
 ApplicationName: test-application-80
 ApplicationType: http
 Department: Sales
+Environment: aws
 HealthMonitor: ping
 ListeningPort: '80'
 PoolMembers: '10.1.1.1,80,enabled::10.2.2.2,8080,enabled'
 ```
-
 
 ## Usage
 It is recommended that you always use an encrypted vault. The creds.yaml file needs to be encrypted.
 
 Run the playbook with vault password and extra vars:
 ```
-ansible-playbook main.yaml --ask-vault-pass --extra-vars "ApplicationName: test-application-80 ApplicationType: http Department: Sales HealthMonitor: ping ListeningPort: '80'PoolMembers: '10.1.1.1,80,enabled::10.2.2.2,8080,enabled'"
+ansible-playbook single_site_virtual_create.yaml --ask-vault-pass --extra-vars "ApplicationName: test-application-80 ApplicationType: http Department: Sales HealthMonitor: ping ListeningPort: '80'PoolMembers: '10.1.1.1,80,enabled::10.2.2.2,8080,enabled'"
 ```
 
 Run the playbook without vault:
 ```
-ansible-playbook main.yaml
+ansible-playbook single_site_virtual_create.yaml
 ```
 
 Run the playbook with vault password file:
 ```
-ansible-playbook main.yaml --vault-password-file ../vault_pass
+ansible-playbook single_site_virtual_create.yaml --vault-password-file ../vault_pass
 ```
 
 Run the playbook with vault password:
 ```
-ansible-playbook main.yaml --ask-vault-pass
+ansible-playbook single_site_virtual_create.yaml --ask-vault-pass
 ```
