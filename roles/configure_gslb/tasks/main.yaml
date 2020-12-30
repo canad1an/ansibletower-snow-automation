@@ -1,0 +1,84 @@
+- name: lookup uuid of newly created virtualservice 1
+  avi_api_session:
+    avi_credentials:
+        username: "{{ aws_tower_username }}"
+        password: "{{ aws_tower_password }}"
+        api_version: 18.2.8
+    controller: "{{ ibm_avi_controller_dal }}"
+    http_method: get
+    path: virtualservice
+    tenant: admin
+    params:
+      { name: "{{ ApplicationName }}-vip" }
+  register: vs_dal
+
+- name: lookup uuid of newly created virtualservice 2
+  avi_api_session:
+    avi_credentials:
+        username: "{{ aws_tower_username }}"
+        password: "{{ aws_tower_password }}"
+        api_version: 18.2.8
+    controller: "{{ ibm_avi_controller_lon }}"
+    http_method: get
+    path: virtualservice
+    tenant: admin
+    params:
+      { name: "{{ ApplicationName }}-vip" }
+  register: vs_lon
+
+- name: lookup cluster uuid for Dallas
+  avi_api_session:
+    avi_credentials:
+        username: "{{ aws_tower_username }}"
+        password: "{{ aws_tower_password }}"
+        api_version: 18.2.8
+    controller: "{{ ibm_avi_controller_dal }}"
+    http_method: get
+    path: cluster
+  register: clusteruuid_dal
+
+- name: lookup cluster uuid for London
+  avi_api_session:
+    avi_credentials:
+        username: "{{ aws_tower_username }}"
+        password: "{{ aws_tower_password }}"
+        api_version: 18.2.8
+    controller: "{{ ibm_avi_controller_lon }}"
+    http_method: get
+    path: cluster
+  register: clusteruuid_lon
+
+- name: Create gslbservice
+  avi_gslbservice:
+    avi_credentials:
+        username: "{{ aws_tower_username }}"
+        password: "{{ aws_tower_password }}"
+        api_version: 18.2.8
+        controller: "{{ ibm_avi_controller_dal }}"
+    name: "{{ ApplicationName }}-gslbservice"
+    domain_names:
+    - "{{ ApplicationName }}.gslb.vmware.local"
+    down_response: 
+      type: GSLB_SERVICE_DOWN_RESPONSE_NONE
+    groups:
+    - members:
+      - cluster_uuid: "{{ clusteruuid_dal.obj.uuid }}"
+        ip:
+          addr: "{{ vs_dal['obj']['results'][0]['vip'][0]['ip_address']['addr'] }}"
+
+          type: V4
+        vs_uuid: "{{ vs_dal['obj']['results'][0]['uuid'] }}"
+      - cluster_uuid: "{{ clusteruuid_lon.obj.uuid }}"
+        ip:
+          addr: "{{ vs_lon['obj']['results'][0]['vip'][0]['ip_address']['addr'] }}"
+          type: V4
+        vs_uuid: "{{ vs_lon['obj']['results'][0]['uuid'] }}"
+      name: "{{ ApplicationName }}-pool"
+      priority: 9
+    health_monitor_refs:
+      - /api/healthmonitor?name=System-GSLB-Ping
+    controller_health_status_enabled: true
+    pool_algorithm: GSLB_SERVICE_ALGORITHM_PRIORITY
+    enabled: true
+    is_federated: true
+    tenant: admin

@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  vars_files:
+    - "vars/creds.yaml"
+
+  # tasks:
+  #   - local_action:
+  #     - command: ansible-galaxy install avinetworks.aviconfig --roles-path /etc/ansible/roles
+  #     - command: ansible-galaxy install avinetworks.avisdk --roles-path /etc/ansible/roles
+  #   - name: Install Avisdk
+  #     command: python2.7 -m pip install avisdk
+  roles:
+    - role: avinetworks.avisdk
+    - role: configure_virtual
+      loc: "ibm-dallas"
+      ctrl: "{{ ibm_avi_controller_dal }}"
+    - role: configure_virtual
+      loc: "ibm-london"
+      ctrl: "{{ ibm_avi_controller_lon }}"
+    - role: configure_gslb
+      gslb_leader: "{{ ibm_avi_controller_lon }}"
