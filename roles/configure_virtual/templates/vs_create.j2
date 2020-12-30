@@ -53,8 +53,9 @@ avi_config:
       tenant_ref: "/api/tenant?name={{ tenant_name | default('admin') }}"
       lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
       default_server_port: "80"
+
+        {% if location == "ibm-dallas" and pool_members is iterable and (pool_members is not string and pool_members is not mapping) %}
       servers:
-        {% if loc == "dal" and env.startswith('ibm-') %}
           {% for poolm in pool_members %}
           {% set pm_details = poolm.split(',') %}
             {% if pm_details[3] == "dallas" %}
@@ -65,7 +66,8 @@ avi_config:
           port: "{{ pm_details[1] }}"
             {% endif %}
           {% endfor %}
-        {% elif loc == "lon" and env.startswith('ibm-') %}
+        {% elif location == "ibm-london" and pool_members is iterable and (pool_members is not string and pool_members is not mapping) %}
+      servers:
           {% for poolm in pool_members %}
           {% set pm_details = poolm.split(',') %}
             {% if pm_details[3] == "london" %}
@@ -76,7 +78,8 @@ avi_config:
           port: "{{ pm_details[1] }}"
             {% endif %}
           {% endfor %}
-        {% else %}
+        {% elif pool_members is iterable and (pool_members is not string and pool_members is not mapping) %}
+      servers:
           {% for poolm in pool_members %}
           {% set pm_details = poolm.split(',') %}
         - ip:
@@ -108,7 +111,7 @@ avi_config:
           enabled: true
           subnet_uuid: "{{ aws_subnet }}"
           vip_id: '0'
-  {% elif env == "ibm-dallas" %}
+  {% elif location == "ibm-dallas" %}
   vsvip:
     - name: "{{ app_name }}-vsvip"
       cloud_ref: "/api/cloud?name={{ cloud_name | default('Default-Cloud') }}"
@@ -127,7 +130,7 @@ avi_config:
                 addr: "{{ ibm_vip_subnet_dal }}"
                 type: V4
               mask: "{{ ibm_vip_mask_dal }}"
-  {% elif env == "ibm-london" %}
+  {% elif location == "ibm-london" %}
   vsvip:
     - name: "{{ app_name }}-vsvip"
       cloud_ref: "/api/cloud?name={{ cloud_name | default('Default-Cloud') }}"
