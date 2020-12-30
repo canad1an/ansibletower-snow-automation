@@ -111,7 +111,7 @@ avi_config:
           enabled: true
           subnet_uuid: "{{ aws_subnet }}"
           vip_id: '0'
-  {% elif location == "ibm-dallas" %}
+  {% elif location == "ibm-dallas" or env == "ibm-dallas" %}
   vsvip:
     - name: "{{ app_name }}-vsvip"
       cloud_ref: "/api/cloud?name={{ cloud_name | default('Default-Cloud') }}"
@@ -130,7 +130,7 @@ avi_config:
                 addr: "{{ ibm_vip_subnet_dal }}"
                 type: V4
               mask: "{{ ibm_vip_mask_dal }}"
-  {% elif location == "ibm-london" %}
+  {% elif location == "ibm-london" or env == "ibm-london" %}
   vsvip:
     - name: "{{ app_name }}-vsvip"
       cloud_ref: "/api/cloud?name={{ cloud_name | default('Default-Cloud') }}"
