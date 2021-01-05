@@ -1,11 +1,11 @@
 ---
-# - hosts: docker
-#   gather_facts: no
-#   become: yes
-#   vars_files:
-#     - "vars/creds.yaml"
-#   roles:
-#     - role: get_f5_data
+- hosts: docker
+  gather_facts: no
+  become: yes
+  vars_files:
+    - "vars/creds.yaml"
+  roles:
+    - role: get_f5_data
 
 
 - hosts: localhost
