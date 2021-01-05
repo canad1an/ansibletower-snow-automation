@@ -1,0 +1,14 @@
+- name: Start avitools docker container and run converter
+  docker_container:
+    name: avitools
+    image: avinetworks/avitools:20.1.2
+    command: "f5_converter.py --f5_host_ip {{ f5_ltm_aws }} --f5_ssh_user {{ f5_ltm_aws_username }} --f5_ssh_password {{ f5_ltm_aws_password }} --vs_filter f5-vip"
+  register: container_output
+- name: Pause for converter
+  pause:
+    minutes: 1
+- name: Copy output file from docker container to tmp
+  fetch:
+    src: "{{ container_output.ansible_facts.docker_container.GraphDriver.Data.UpperDir }}/output/{{ f5_ltm_aws }}/output/bigip-Output.json"
+    dest: /tmp/bigip.json
+    flat: yes

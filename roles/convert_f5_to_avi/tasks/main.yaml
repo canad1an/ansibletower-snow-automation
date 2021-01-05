@@ -1,0 +1,17 @@
+- debug: var=avi_converted_data.Pool.0.servers
+- name: Avi Deploy converted virtual
+  include_role:
+    name: avinetworks.aviconfig
+  vars:
+    cloud_name: "Default-Cloud"
+    tenant_name: "admin"
+    app_name: "{{ ApplicationName }}"
+    avi_controller: "{{ ctrl }}"
+    department: "{{ Department }}"
+    avi_config_state: "present"
+    avi_username: "{{ aws_tower_username }}"
+    avi_password: "{{ aws_tower_password }}"
+    api_version: "18.2.8"
+    aws_subnet: "{{ aws_network_ref }}"
+    tmp_avi_config: "{{ lookup('template','templates/vs_create.j2') | from_yaml }}"
+    avi_config: "{{tmp_avi_config.avi_config }}"

@@ -1,0 +1,27 @@
+---
+# - hosts: docker
+#   gather_facts: no
+#   become: yes
+#   vars_files:
+#     - "vars/creds.yaml"
+#   roles:
+#     - role: get_f5_data
+
+
+- hosts: localhost
+  gather_facts: no
+
+  vars:
+    avi_converted_data: "{{ lookup('file', '/tmp/bigip.json') | from_json }}"
+  vars_files:
+    - "vars/creds.yaml"
+  # tasks:
+  #   - debug: var=avi_converted_data
+  # pre_tasks:
+  #   - pip:
+  #       name: 
+  #       - avisdk 
+  #       state: latest
+  roles:
+    - role: convert_f5_to_avi
+      ctrl: "{{ aws_avi_controller_1 }}"

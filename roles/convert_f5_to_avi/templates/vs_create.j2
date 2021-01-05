@@ -1,0 +1,86 @@
+#jinja2: lstrip_blocks: True
+
+set_fact:
+  {% if avi_converted_data.VirtualService.0.services.0.enable_ssl == false %}
+    {% set network_prof = "System-TCP-Proxy" %}
+    {% set app_profile = "System-HTTP" %}
+    {% set frontend_ssl = 0 %}
+    {% set backend_ssl = 0 %}
+  {% elif avi_converted_data.VirtualService.0.services.0.enable_ssl == true %}
+    {% set network_prof = "System-TCP-Proxy" %}
+    {% set app_profile = "System-Secure-HTTP" %}
+    {% set frontend_ssl = 1 %}
+    {% set backend_ssl = 1 %}
+  {% endif %}
+
+
+  {% if avi_converted_data.HealthMonitor.0.type == "HEALTH_MONITOR_PING" %}
+    {% set hm_prof = "System-Ping" %}
+  {% else %}
+    {% set hm_prof = "" %}
+  {% endif %}
+
+avi_config:
+  {% if avi_config_state != "absent" %}
+
+  pool:
+    - api_version: "{{ api_version | default('18.2.8') }}"
+      avi_config_state: present
+      name: "{{ app_name }}-pool"
+      cloud_ref: "/api/cloud?name={{ cloud_name | default('Default-Cloud') }}"
+      tenant: "{{ tenant_name | default('admin') }}"
+      tenant_ref: "/api/tenant?name={{ tenant_name | default('admin') }}"
+      lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
+      default_server_port: "80"
+      servers:
+          {% for poolm in avi_converted_data.Pool.0.servers %}
+        - ip:
+           addr: "{{ poolm.ip.addr }}"
+           type: 'V4'
+           enabled: "{{ poolm.enabled }}"
+          port: "{{ poolm.port }}"
+          {% endfor %}
+      {% if backend_ssl == 1 %}
+      sni_enabled: true
+      ssl_profile_ref: "/api/sslprofile?name=System-Standard"
+      {% endif %}
+      {% if hm_prof != "" %}
+      health_monitor_refs: "/api/healthmonitor?name={{ hm_prof }}"
+      inline_health_monitor: true
+      {% endif %}
+
+  vsvip:
+    - name: "{{ app_name }}-vsvip"
+      cloud_ref: "/api/cloud?name={{ cloud_name | default('Default-Cloud') }}"
+      vip:
+        - auto_allocate_ip: true
+          auto_allocate_ip_type: V4_ONLY
+          auto_allocate_floating_ip: true
+          avi_allocated_fip: true
+          avi_allocated_vip: true
+          enabled: true
+          subnet_uuid: "{{ aws_subnet }}"
+          vip_id: '0'
+
+  virtualservice:
+    - api_version: "{{ api_version | default('18.2.8') }}"
+      avi_config_state: present
+      avi_api_update_method: patch
+      avi_api_patch_op: replace
+      name: "{{ app_name }}-vip"
+      cloud_ref: "/api/cloud?name={{ cloud_name | default('Default-Cloud') }}"
+      tenant: "{{ tenant_name | default('admin') }}"
+      tenant_ref: "/api/tenant?name={{ tenant_name | default('admin') }}"
+      pool_ref: "/api/pool?name={{ app_name }}-pool"
+      vsvip_ref: "/api/vsvip?name={{ app_name }}-vsvip"
+      network_profile_ref: "/api/networkprofile?name={{ network_prof }}"
+      application_profile_ref: "/api/applicationprofile?name={{ app_profile }}"
+      services:
+        - port: "{{ avi_converted_data.VirtualService.0.services.0.port | default('80') }}"
+          {% if frontend_ssl == 1 %}
+          enable_ssl: true
+      ssl_key_and_certificate_refs: "/api/sslkeyandcertificate?name=System-Default-Cert"
+      ssl_profile_ref: "/api/sslprofile?name=System-Standard"
+          {% endif %}
+
+  {%  endif %}

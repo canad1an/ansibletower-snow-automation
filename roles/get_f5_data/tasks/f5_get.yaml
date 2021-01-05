@@ -1,0 +1,16 @@
+- set_fact:
+   provider:
+    server: "{{ f5_ltm_aws }}"
+    user: "{{ f5_ltm_aws_username }}"
+    password: "{{ f5_ltm_aws_password }}"
+    server_port: 8443
+    validate_certs: no
+- name: Collect information of all virtual servers
+  bigip_device_facts:
+    gather_subset:
+     - virtual-servers
+    provider: "{{provider}}"
+  register: facts_result
+- name: Display the results
+  debug:
+    var: facts_result
