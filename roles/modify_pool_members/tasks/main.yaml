@@ -1,13 +1,17 @@
-- debug: var=avi_converted_data.Pool.0.servers
-- name: Avi Deploy converted virtual
+- name: Avi Deploy new virtual
   include_role:
     name: avinetworks.aviconfig
   vars:
     cloud_name: "Default-Cloud"
     tenant_name: "admin"
     app_name: "{{ ApplicationName }}"
+    app_type: "{{ ApplicationType }}"
+    env: "{{ Environment }}"
     avi_controller: "{{ ctrl }}"
+    location: "{{ loc }}"
     department: "{{ Department }}"
+    pool_name: "{{ PoolName }}"
+    pool_members: "{{  PoolMembers.split('::') }}"
     avi_config_state: "present"
     avi_username: "{{ aws_tower_username }}"
     avi_password: "{{ aws_tower_password }}"

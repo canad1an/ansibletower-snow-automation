@@ -3,7 +3,7 @@
     avi_credentials:
         username: "{{ aws_tower_username }}"
         password: "{{ aws_tower_password }}"
-        api_version: 18.2.8
+        api_version: "{{ avi_version }}"
     controller: "{{ ibm_avi_controller_dal }}"
     http_method: get
     path: virtualservice
@@ -17,7 +17,7 @@
     avi_credentials:
         username: "{{ aws_tower_username }}"
         password: "{{ aws_tower_password }}"
-        api_version: 18.2.8
+        api_version: "{{ avi_version }}"
     controller: "{{ ibm_avi_controller_lon }}"
     http_method: get
     path: virtualservice
@@ -31,7 +31,7 @@
     avi_credentials:
         username: "{{ aws_tower_username }}"
         password: "{{ aws_tower_password }}"
-        api_version: 18.2.8
+        api_version: "{{ avi_version }}"
     controller: "{{ ibm_avi_controller_dal }}"
     http_method: get
     path: cluster
@@ -42,7 +42,7 @@
     avi_credentials:
         username: "{{ aws_tower_username }}"
         password: "{{ aws_tower_password }}"
-        api_version: 18.2.8
+        api_version: "{{ avi_version }}"
     controller: "{{ ibm_avi_controller_lon }}"
     http_method: get
     path: cluster
@@ -53,7 +53,7 @@
     avi_credentials:
         username: "{{ aws_tower_username }}"
         password: "{{ aws_tower_password }}"
-        api_version: 18.2.8
+        api_version: "{{ avi_version }}"
         controller: "{{ ibm_avi_controller_dal }}"
     name: "{{ ApplicationName }}-gslbservice"
     domain_names:

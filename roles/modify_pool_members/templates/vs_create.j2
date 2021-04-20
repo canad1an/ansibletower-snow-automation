@@ -1,0 +1,22 @@
+#jinja2: lstrip_blocks: True
+
+avi_config:
+  {% if avi_config_state != "absent" %}
+
+  pool:
+    - api_version: "{{ api_version | default('18.2.8') }}"
+      avi_config_state: present
+      avi_api_update_method: patch
+      avi_api_patch_op: replace
+      name: "{{ pool_name }}"
+      servers:
+          {% for poolm in pool_members %}
+          {% set pm_details = poolm.split(',') %}
+        - ip:
+           addr: "{{ pm_details[0] }}"
+           type: 'V4'
+           enabled: "{{ pm_details[2] }}"
+          port: "{{ pm_details[1] }}"
+          {% endfor %}
+
+  {%  endif %}
