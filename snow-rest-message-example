@@ -1,0 +1,11 @@
+{
+  "extra_vars": {
+    "ApplicationName": "${app_name_fqdn}",
+    "ApplicationType": "${application_type}",
+    "Department": "${department_lb}",
+    "Environment": "${env}",
+    "ListeningPort": "${listening_port}",
+    "HealthMonitor": "${health_monitor}",
+    "PoolMembers": "${pool_members}"
+  }
+}
