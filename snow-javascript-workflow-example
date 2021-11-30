@@ -1,0 +1,166 @@
+all
+
+try { 
+ var r = new sn_ws.RESTMessageV2('lbv2-awx', 'lbpost');
+
+	
+var plist = "";
+var poolmembers = JSON.parse(current.variables.pool_members);
+for (var c in poolmembers) {
+for (var key in poolmembers[c]) {
+    if (poolmembers[c].hasOwnProperty(key)) {
+        plist = plist.concat(poolmembers[c][key] + ",");
+    }
+}
+plist = plist.replace(/,\s*$/, "");
+plist = plist.concat("::");
+}
+plist = plist.replace(/::\s*$/, "");
+r.setStringParameter('department_lb' , current.variables.department_lb);
+r.setStringParameter('env' , current.variables.environment);
+r.setStringParameter('location' , current.variables.location);
+r.setStringParameter('application_type' , current.variables.application_type);
+r.setStringParameter('app_name_fqdn' , current.variables.app_name_fqdn);
+r.setStringParameter('listening_port' , current.variables.listening_port);
+r.setStringParameter('health_monitor' , current.variables.health_monitor);
+r.setStringParameter('pool_members' , plist);
+
+ var response = r.execute();
+ var responseBody = response.getBody();
+ var httpStatus = response.getStatusCode();
+}
+catch(ex) {
+ var message = ex.message;
+}
+var comments = "Department: " + current.variables.department_lb + "\n";
+comments += "Environment: " + current.variables.environment + "\n";
+comments += "Location: " + current.variables.location + "\n";
+comments += "Application Type: " + current.variables.application_type + "\n";
+comments += "Application Name: " + current.variables.app_name_fqdn + "\n";
+comments += "Health Monitor: " + current.variables.health_monitor + "\n";
+comments += "Pool Members: " + plist + "\n";
+current.comments = comments;
+
+
+
+
+GSLB
+
+try { 
+ var r = new sn_ws.RESTMessageV2('lbv2-ibm-gslb', 'lbpost');
+
+if (current.variables.gslbservice == "No") {
+	var plist = "";
+	var poolmembers = JSON.parse(current.variables.pool_members);
+	for (var c in poolmembers) {
+		for (var key in poolmembers[c]) {
+			if (poolmembers[c].hasOwnProperty(key)) {
+				plist = plist.concat(poolmembers[c][key] + ",");
+			}
+		}
+	plist = plist.replace(/,\s*$/, "");
+	plist = plist.concat("::");
+	}
+plist = plist.replace(/::\s*$/, "");
+} else if (current.variables.gslbservice == "Yes" && current.variables.environment == "ibm") {
+	var plistgslb = "";
+	var poolmembersgslb = JSON.parse(current.variables.pool_members_ibm_gslb);
+	for (var d in poolmembersgslb) {
+		for (var keya in poolmembersgslb[d]) {
+			if (poolmembersgslb[d].hasOwnProperty(keya)) {
+				plistgslb = plistgslb.concat(poolmembersgslb[d][keya] + ",");
+			}
+		}
+	plistgslb = plistgslb.replace(/,\s*$/, "");
+	plistgslb = plistgslb.concat("::");
+	}
+plist = plistgslb.replace(/::\s*$/, "");
+}
+	
+
+r.setStringParameter('department_lb' , current.variables.department_lb);
+r.setStringParameter('env' , current.variables.environment);
+r.setStringParameter('location' , current.variables.location);
+r.setStringParameter('gslbservice' , current.variables.gslbservice);
+r.setStringParameter('application_type' , current.variables.application_type);
+r.setStringParameter('app_name_fqdn' , current.variables.app_name_fqdn);
+r.setStringParameter('listening_port' , current.variables.listening_port);
+r.setStringParameter('health_monitor' , current.variables.health_monitor);
+r.setStringParameter('pool_members' , plist);
+
+ var response = r.execute();
+ var responseBody = response.getBody();
+ var httpStatus = response.getStatusCode();
+}
+catch(ex) {
+ var message = ex.message;
+}
+var comments = "Department: " + current.variables.department_lb + "\n";
+comments += "Environment: " + current.variables.environment + "\n";
+comments += "Location: " + current.variables.location + "\n";
+comments += "Application Type: " + current.variables.application_type + "\n";
+comments += "Application Name: " + current.variables.app_name_fqdn + "\n";
+comments += "Health Monitor: " + current.variables.health_monitor + "\n";
+comments += "Pool Members: " + plist + "\n";
+current.comments = comments;
+
+
+NO GSLB
+
+try { 
+ var r = new sn_ws.RESTMessageV2('lbv2-ibm', 'lbpost');
+
+if (current.variables.gslbservice == "No") {
+	var plist = "";
+	var poolmembers = JSON.parse(current.variables.pool_members);
+	for (var c in poolmembers) {
+		for (var key in poolmembers[c]) {
+			if (poolmembers[c].hasOwnProperty(key)) {
+				plist = plist.concat(poolmembers[c][key] + ",");
+			}
+		}
+	plist = plist.replace(/,\s*$/, "");
+	plist = plist.concat("::");
+	}
+plist = plist.replace(/::\s*$/, "");
+} else if (current.variables.gslbservice == "Yes" && current.variables.environment == "ibm") {
+	var plistgslb = "";
+	var poolmembersgslb = JSON.parse(current.variables.pool_members_ibm_gslb);
+	for (var d in poolmembersgslb) {
+		for (var keya in poolmembersgslb[d]) {
+			if (poolmembersgslb[d].hasOwnProperty(keya)) {
+				plistgslb = plistgslb.concat(poolmembersgslb[d][keya] + ",");
+			}
+		}
+	plistgslb = plistgslb.replace(/,\s*$/, "");
+	plistgslb = plistgslb.concat("::");
+	}
+plist = plistgslb.replace(/::\s*$/, "");
+}
+	
+
+r.setStringParameter('department_lb' , current.variables.department_lb);
+r.setStringParameter('env' , current.variables.environment);
+r.setStringParameter('location' , current.variables.location);
+r.setStringParameter('gslbservice' , current.variables.gslbservice);
+r.setStringParameter('application_type' , current.variables.application_type);
+r.setStringParameter('app_name_fqdn' , current.variables.app_name_fqdn);
+r.setStringParameter('listening_port' , current.variables.listening_port);
+r.setStringParameter('health_monitor' , current.variables.health_monitor);
+r.setStringParameter('pool_members' , plist);
+
+ var response = r.execute();
+ var responseBody = response.getBody();
+ var httpStatus = response.getStatusCode();
+}
+catch(ex) {
+ var message = ex.message;
+}
+var comments = "Department: " + current.variables.department_lb + "\n";
+comments += "Environment: " + current.variables.environment + "\n";
+comments += "Location: " + current.variables.location + "\n";
+comments += "Application Type: " + current.variables.application_type + "\n";
+comments += "Application Name: " + current.variables.app_name_fqdn + "\n";
+comments += "Health Monitor: " + current.variables.health_monitor + "\n";
+comments += "Pool Members: " + plist + "\n";
+current.comments = comments;
